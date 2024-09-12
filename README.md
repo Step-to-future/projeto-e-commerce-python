@@ -6,25 +6,7 @@
 **About the project**
 
  The project is a simple CRUD solution for a local e-commerce system based in python. The solution involves the following steps:
-<div style="background-color: #282A36; padding: 1rem; color: #BD93F9; border-radius: 5px">
-
-<div style="display: flex; flex-direction: row; padding: .4rem; align-items: left; gap: .3rem; margin-bottom: 1rem">
-<div style="background-color: #f45258; height: .6rem; width: .6rem; padding: 0; margin: 0; border-radius: 50%"></div>
-<div style="background-color: #f3b51d; height: .6rem; width: .6rem; padding: 0; margin: 0; border-radius: 50%"></div>
-<div style="background-color: #24c444; height: .6rem; width: .6rem; padding: 0; margin: 0; border-radius: 50%"></div>
-</div>
-
-<span style="color: #6272A4; padding-inline-start: 1rem"># Requirements</span>
-1. <span style="color: #8BE9FD"><b style="color: #50FA7B">Create</b> products</span>
-2. <span style="color: #8BE9FD"><b style="color: #50FA7B">Read</b> product information</span>
-3. <span style="color: #8BE9FD"><b style="color: #50FA7B">Update</b> product information</span>
-4. <span style="color: #8BE9FD"><b style="color: #50FA7B">Delete</b> products
-5. <span style="color: #8BE9FD"><b style="color: #50FA7B">Create</b> a new <b style="color: #FF79C6">buying request</b></span>
-6. <span style="color: #8BE9FD"><b style="color: #50FA7B">Cancel</b> the existing request</span>
-7. <span style="color: #8BE9FD"><b style="color: #50FA7B">Return</b> the value
-8. <span style="color: #8BE9FD"><b style="color: #50FA7B">Store data</b> in external files (txt format)</span>
-9. <span style="color: #8BE9FD">Assure the integrity of the data by using a <b style="color: #50FA7B">authentication key</b></span>
-</div>
+![steps](./images/Captura%20de%20tela%202024-09-11%20232422.png)
 
 
 <hr>
