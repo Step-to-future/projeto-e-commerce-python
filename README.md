@@ -1,9 +1,9 @@
 # Team: Step To the Future
 
 
-### Description
+### Briefing
 
-**About the project**
+**Project Description**
 
  The project is a simple CRUD solution for a local e-commerce system based in python. The solution involves the following steps:
 
