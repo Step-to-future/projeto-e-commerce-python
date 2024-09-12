@@ -17,7 +17,7 @@
 >This team includes members that are an example of exceptional knowledge and experience, not to mention that each member are quite competent and dedicated to their objectives
 
 
-Name | Assignment
+Name | Role
 :---- | :---
 Abraão Filipi dos Santos | Team leader
 Adriely Ribeiro | Team Coordinator
