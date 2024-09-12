@@ -6,6 +6,7 @@
 **About the project**
 
  The project is a simple CRUD solution for a local e-commerce system based in python. The solution involves the following steps:
+ 
 ![steps](./images/Captura%20de%20tela%202024-09-11%20232422.png)
 
 
