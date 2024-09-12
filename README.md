@@ -6,7 +6,7 @@
 **About the project**
 
  The project is a simple CRUD solution for a local e-commerce system based in python. The solution involves the following steps:
- 
+
 ![steps](./images/Captura%20de%20tela%202024-09-11%20232422.png)
 
 
@@ -21,6 +21,8 @@ Name | Contact
 :---- | :---- 
 Abraão Filipi dos Santos | +55 (81) 9 9441-8409
 Adriely Ribeiro | +55 (81) 9 9195-0225
+Diego Silva | +55 (81) 9 9xxxx-xxxx
+Fernanda Silva | +55 (81) 9 9xxxx-xxxx
 
 #### Our motto
 > "For each code line, a step to the future.🚀"
