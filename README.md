@@ -17,12 +17,12 @@
 >This team includes members that are an example of exceptional knowledge and experience, not to mention that each member are quite competent and dedicated to their objectives
 
 
-Name | Contact
-:---- | :---- 
-Abraão Filipi dos Santos | +55 (81) 9 9441-8409
-Adriely Ribeiro | +55 (81) 9 9195-0225
-Diego Silva | +55 (81) 9 9xxxx-xxxx
-Fernanda Silva | +55 (81) 9 9xxxx-xxxx
+Name | Assignment
+:---- | :---
+Abraão Filipi dos Santos | Team leader
+Adriely Ribeiro | Team Coordinator
+Diego Silva | Team Member
+Fernanda Silva | Team Member
 
 #### Our motto
 > "For each code line, a step to the future.🚀"
