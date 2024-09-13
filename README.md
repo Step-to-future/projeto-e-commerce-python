@@ -1,5 +1,11 @@
 # Team: Step To the Future
 
+## First release: Beta release 0.1
+
+**What is new:**
+
+- Product management is now working
+- Authentication System is now working
 
 ### Briefing
 

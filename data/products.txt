@@ -1,0 +1,4 @@
+Código: 1; Nome do produto: Chave phillips; Descrição: Chave phillips aço inoxidável; Preço de compra: 19.99; Preço de venda: 25.45
+Código: 2; Nome do produto: Escada; Descrição: Escada de alumínio; Preço de compra: 179.9; Preço de venda: 244.5
+Código: 3; Nome do produto: Martelo; Descrição: Martelo inoxidável; Preço de compra: 22.99; Preço de venda: 69.99
+Código: 4; Nome do produto: Pregos de Aço; Descrição: Pregos de Aço - Caixa 100 un.; Preço de compra: 15.16; Preço de venda: 22.55
