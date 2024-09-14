@@ -9,7 +9,7 @@ autentication_key = "0000"
 def authenticate():
     for count in range(1,4):
         print("Voce tem 3 tentativas de login")
-        print(f"Tentativa numero{count}")
+        print(f"Tentativa numero {count}")
         key = input("Digite a chave de autenticação: ")
         if key == autentication_key: 
                 print("Acesso liberado!")
