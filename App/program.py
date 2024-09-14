@@ -102,9 +102,11 @@ def main():
         elif option == 4:
             os.system('cls')
             print("Saindo...")
-            time.sleep(2)
+            time.sleep(1)
             os.system('cls')
             print("Até logo!")
+            time.sleep(1)
+            os.system('cls')
             quit()
         else:
             os.system('cls')

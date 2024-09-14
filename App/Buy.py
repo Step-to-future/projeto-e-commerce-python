@@ -1,5 +1,4 @@
 import re
-from Crud_manipulation import CrudManipulation
 
 class Buy:
     def __init__(self, buy_code: int, buy_date: str, product_code: int, buying_amount: int):
