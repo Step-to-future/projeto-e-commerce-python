@@ -12,16 +12,8 @@ def authenticate():
         print(f"Tentativa numero {count}")
         key = input("Digite a chave de autenticação: ")
         if key == autentication_key: 
-                print("Acesso liberado!")
-                time.sleep(1)
-                print("Entrando no sistema...")
-                time.sleep(1)
-                print("[20%]")
-                time.sleep(1)
-                print("[60%]")
-                time.sleep(1)
-                print("[100%]")
-                time.sleep(1)
+                print("Acesso liberado, entrando...")
+                time.sleep(.3)
                 os.system("cls")
                 return True
 
