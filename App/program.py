@@ -127,6 +127,7 @@ def make_purchase():
         print("\nNenhum produto foi adicionado ao carrinho.")
 
     input("\nPressione Enter para voltar ao menu principal...")
+    main()
 
 # Show products list
 def show_all_products():
