@@ -108,7 +108,7 @@ def make_purchase():
             if selected_product:
                 product_order.append(selected_product)
                 total_value += selected_product.selling_price * product_ammount
-                print(f"Produto: {selected_product.name} adicionado ao carrinho. Preço: R$ {(selected_product.selling_price * product_ammount):.2f} ({selected_product.selling_price} por unidade)")
+                print(f"Produto: '{selected_product.name} ' adicionado ao carrinho. Preço: R$ {(selected_product.selling_price * product_ammount):.2f} ({selected_product.selling_price} por unidade)")
             else:
                 print("Código de produto inválido. Tente novamente.")
         
@@ -127,6 +127,7 @@ def make_purchase():
         print("\nNenhum produto foi adicionado ao carrinho.")
 
     input("\nPressione Enter para voltar ao menu principal...")
+    os.system('cls')  # Clear the screen
     main()
 
 # Show products list

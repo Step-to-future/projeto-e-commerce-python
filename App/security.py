@@ -13,7 +13,7 @@ def authenticate():
         key = input("Digite a chave de autenticação: ")
         if key == autentication_key: 
                 print("Acesso liberado, entrando...")
-                time.sleep(.3)
+                time.sleep(.6)
                 os.system("cls")
                 return True
 
