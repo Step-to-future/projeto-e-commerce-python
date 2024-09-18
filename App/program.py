@@ -2,6 +2,7 @@ import os
 import security
 import time
 import re
+from TextUtils import *
 
 class Product:
     def __init__(self, code: int, name: str, description: str, buying_price: float, selling_price: float):
@@ -101,14 +102,20 @@ def make_purchase():
             # Convert to int the order code
             order_code = int(order)
             product_ammount = int(input("Digite a quantidade: "))
+            order_date = input("Digite a data da compra no formato dd/mm/aaaa: ")
             
             # Search for the product by code
             selected_product = next((product for product in products if product.code == order_code), None)
+
+            pattern_true = re.match(pattern, order_date)
             
             if selected_product:
-                product_order.append(selected_product)
-                total_value += selected_product.selling_price * product_ammount
-                print(f"Produto: '{selected_product.name} ' adicionado ao carrinho. Preço: R$ {(selected_product.selling_price * product_ammount):.2f} ({selected_product.selling_price} por unidade)")
+                if not pattern_true:
+                    print("@@@@ Data inválida... @@@@")
+                else:
+                    product_order.append(selected_product)
+                    total_value += selected_product.selling_price * product_ammount
+                    print(f"Produto: '{selected_product.name} ' adicionado ao carrinho. Preço: R$ {(selected_product.selling_price * product_ammount):.2f} ({selected_product.selling_price} por unidade)")
             else:
                 print("Código de produto inválido. Tente novamente.")
         
@@ -158,10 +165,35 @@ def show_all_products():
     main()
 
 def main():
-    menu = f"{'='*15}MENU{'='*15}\n1. Cadastrar produto\n2. Exibir produtos\n3. Nova Compra\n4. Sair\n{'='*34}"
+    drawBox(1, 1, 60, 20, GREEN)
+    menu = f"MENU"
+    menu1 = '1. Cadastrar produto'
+    menu2 = '2. Exibir produtos'
+    menu3 = '3. Nova Compra'
+    menu4 = '4. Cancelar compra'
+    menu5 = '5. Editar produto'
+    menu6 = '6. Apagar produto'
+    menu7 = '7. Sair'
+    
 
     while True:
-        print(menu)
+        gotoxy(26, 1) 
+        printGreen(menu, end="")
+        gotoxy(5, 3) 
+        printGreen(menu1, end="")
+        gotoxy(5, 5) 
+        printGreen(menu2, end="")
+        gotoxy(5, 7) 
+        printGreen(menu3, end="")
+        gotoxy(5, 9) 
+        printGreen(menu4, end="")
+        gotoxy(5, 11) 
+        printGreen(menu5, end="")
+        gotoxy(5, 13) 
+        printGreen(menu6, end="")
+        gotoxy(5, 15) 
+        printGreen(menu7, end="")
+        gotoxy(5, 18) 
         option = int(input("Digite o número da opção: "))
 
         if option == 1:
@@ -175,6 +207,32 @@ def main():
             os.system('cls')
             make_purchase()
         elif option == 4:
+            # cancel_order()
+            gotoxy(5, 9)
+            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+            gotoxy(5, 10)
+            input("Pressione ENTER para voltar ao menu...")
+            os.system('cls')
+            main()
+        elif option == 5:
+            # update_product()
+            gotoxy(5, 11)
+            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+            gotoxy(5, 12)
+            input("Pressione ENTER para voltar ao menu...")
+            os.system('cls')
+            main()
+            pass
+        elif option == 6:
+            # delete_product()
+            gotoxy(5, 13)
+            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+            gotoxy(5, 14)
+            input("Pressione ENTER para voltar ao menu...")
+            os.system('cls')
+            main()
+            pass
+        elif option == 7:
             os.system('cls')
             print("Saindo...")
             time.sleep(1)
