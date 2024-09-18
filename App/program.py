@@ -16,6 +16,16 @@ class Product:
     def __str__(self):
         return f"Código: {self.code}; Nome do produto: {self.name}; Descrição: {self.description}; Preço de compra: {self.buying_price}; Preço de venda: {self.selling_price}\n"
         
+class Order:
+    def __init__(self, order_id: int, product_id: int, product_ammount: int, order_price: float, order_date: str):
+        self.order_id = order_id
+        self.product_id = product_id
+        self.product_ammount = product_ammount
+        self.order_price = order_price
+        self.order_date = order_date
+
+    def __str__(self):
+        return f"ID do pedido: {self.order_id}; ID do produto: {self.product_id}; Preço: {self.order_price:.2f}; Data: {self.order_date}\n"
 
 # Create product
 
@@ -55,8 +65,16 @@ def create_new_product():
     os.system('cls')  # Clear screen
     main()
 
-def make_purchase():
+def update_product():
+    pass
 
+def delete_product():
+    pass
+
+def cancel_order():
+    pass
+
+def make_purchase():
 
     try:
         # Abrindo o arquivo de produtos
@@ -74,7 +92,7 @@ def make_purchase():
                         buying_price=float(product_data[3].split(":")[1]),
                         selling_price=float(product_data[4].split(":")[1]),
                     )
-                    products.append(product)  # Adiciona o produto à lista
+                    products.append(product) 
 
     except FileNotFoundError:
         print("Erro: Arquivo de produtos não encontrado.")
@@ -92,7 +110,6 @@ def make_purchase():
     product_order = []
     total_value = 0.0
 
-    # Order loop
 
     order = input("Digite o código do produto desejado (ou '0' para voltar ao menu): ")
     pattern = r'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$'
