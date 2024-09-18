@@ -3,3 +3,4 @@ Código: 2; Nome do produto: Escada; Descrição: Escada de alumínio; Preço de
 Código: 3; Nome do produto: Martelo; Descrição: Martelo inoxidável; Preço de compra: 22.99; Preço de venda: 69.99
 Código: 4; Nome do produto: Pregos de Aço; Descrição: Pregos de Aço - Caixa 100 un.; Preço de compra: 15.16; Preço de venda: 22.55
 Código: 5; Nome do produto: Porta de madeira de pinheiro; Descrição: Porta de madeira com medidas 2,10m x 1.2m; Preço de compra: 145.9; Preço de venda: 169.58
+Código: 6; Nome do produto: Martelo; Descrição: Martelo; Preço de compra: 256.0; Preço de venda: 259.0

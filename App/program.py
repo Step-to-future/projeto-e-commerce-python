@@ -1,5 +1,5 @@
 import os
-import security
+from security import *
 import time
 import re
 from TextUtils import *
@@ -15,7 +15,7 @@ class Product:
 
     def __str__(self):
         return f"Código: {self.code}; Nome do produto: {self.name}; Descrição: {self.description}; Preço de compra: {self.buying_price}; Preço de venda: {self.selling_price}\n"
-
+        
 
 # Create product
 
@@ -56,6 +56,8 @@ def create_new_product():
     main()
 
 def make_purchase():
+
+
     try:
         # Abrindo o arquivo de produtos
         with open("./data/products.txt", "r", encoding="UTF-8") as file:
@@ -91,36 +93,37 @@ def make_purchase():
     total_value = 0.0
 
     # Order loop
-    while True:
-        order = input("Digite o código do produto desejado (ou '0' para finalizar): ")
-        pattern = r'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$'
 
-        if order == '0':  # Checkout if zero
-            break
+    order = input("Digite o código do produto desejado (ou '0' para voltar ao menu): ")
+    pattern = r'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$'
+
+    if order == '0':  # Checkout if zero
+        os.system('cls')
+        main()
+    
+    try:
+        # Convert to int the order code
+        order_code = int(order)
+        product_ammount = int(input("Digite a quantidade: "))
+        order_date = input("Digite a data da compra no formato dd/mm/aaaa: ")
         
-        try:
-            # Convert to int the order code
-            order_code = int(order)
-            product_ammount = int(input("Digite a quantidade: "))
-            order_date = input("Digite a data da compra no formato dd/mm/aaaa: ")
-            
-            # Search for the product by code
-            selected_product = next((product for product in products if product.code == order_code), None)
+        # Search for the product by code
+        selected_product = next((product for product in products if product.code == order_code), None)
 
-            pattern_true = re.match(pattern, order_date)
-            
-            if selected_product:
-                if not pattern_true:
-                    print("@@@@ Data inválida... @@@@")
-                else:
-                    product_order.append(selected_product)
-                    total_value += selected_product.selling_price * product_ammount
-                    print(f"Produto: '{selected_product.name} ' adicionado ao carrinho. Preço: R$ {(selected_product.selling_price * product_ammount):.2f} ({selected_product.selling_price} por unidade)")
+        pattern_true = re.match(pattern, order_date)
+        
+        if selected_product:
+            if not pattern_true:
+                print("@@@@ Data inválida... @@@@")
             else:
-                print("Código de produto inválido. Tente novamente.")
-        
-        except ValueError:
-            print("Código inválido! Digite um número.")
+                product_order.append(selected_product)
+                total_value += selected_product.selling_price * product_ammount
+                print(f"Produto: '{selected_product.name} ' adicionado ao carrinho. Preço: R$ {(selected_product.selling_price * product_ammount):.2f} ({selected_product.selling_price} por unidade)")
+        else:
+            print("Código de produto inválido. Tente novamente.")
+    
+    except ValueError:
+        print("Código inválido! Digite um número.")
 
     # Checkout
     if product_order:
@@ -194,58 +197,67 @@ def main():
         gotoxy(5, 15) 
         printGreen(menu7, end="")
         gotoxy(5, 18) 
-        option = int(input("Digite o número da opção: "))
-
-        if option == 1:
+        option = input("Digite o número da opção: ")
+        try:
+            if option == "1":
+                os.system('cls')
+                print(f"{'='*10}Cadastro de produto{'='*10}")
+                create_new_product()
+            elif option == "2":
+                os.system('cls')
+                show_all_products()
+            elif option == "3":
+                os.system('cls')
+                make_purchase()
+            elif option == "4":
+                # cancel_order()
+                gotoxy(5, 9)
+                printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+                gotoxy(5, 10)
+                input("Pressione ENTER para voltar ao menu...")
+                os.system('cls')
+                main()
+            elif option == "5":
+                # update_product()
+                gotoxy(5, 11)
+                printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+                gotoxy(5, 12)
+                input("Pressione ENTER para voltar ao menu...")
+                os.system('cls')
+                main()
+                pass
+            elif option == "6":
+                # delete_product()
+                gotoxy(5, 13)
+                printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+                gotoxy(5, 14)
+                input("Pressione ENTER para voltar ao menu...")
+                os.system('cls')
+                main()
+                pass
+            elif option == "7":
+                os.system('cls')
+                print("Saindo...")
+                time.sleep(1)
+                os.system('cls')
+                print("Até logo!")
+                time.sleep(1)
+                os.system('cls')
+                quit()
+            elif option == "":
+                os.system('cls')
+                print("@@@ O campo não pode ficar vazio @@@")
+                time.sleep(1)
+                os.system('cls')
+                main()
+            else:
+                os.system('cls')
+                print("@@@ Digite uma opção válida @@@")
+            break
+        except:
             os.system('cls')
-            print(f"{'='*10}Cadastro de produto{'='*10}")
-            create_new_product()
-        elif option == 2:
-            os.system('cls')
-            show_all_products()
-        elif option == 3:
-            os.system('cls')
-            make_purchase()
-        elif option == 4:
-            # cancel_order()
-            gotoxy(5, 9)
-            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-            gotoxy(5, 10)
-            input("Pressione ENTER para voltar ao menu...")
-            os.system('cls')
-            main()
-        elif option == 5:
-            # update_product()
-            gotoxy(5, 11)
-            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-            gotoxy(5, 12)
-            input("Pressione ENTER para voltar ao menu...")
-            os.system('cls')
-            main()
-            pass
-        elif option == 6:
-            # delete_product()
-            gotoxy(5, 13)
-            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-            gotoxy(5, 14)
-            input("Pressione ENTER para voltar ao menu...")
-            os.system('cls')
-            main()
-            pass
-        elif option == 7:
-            os.system('cls')
-            print("Saindo...")
-            time.sleep(1)
-            os.system('cls')
-            print("Até logo!")
-            time.sleep(1)
-            os.system('cls')
-            quit()
-        else:
-            os.system('cls')
-            print("@@@ Digite uma opção válida @@@")
-        break
+            print("@@@ Digite uma opção válida e numérica @@@")
 
 # Authenticate user
-security.authenticate()
+authenticate()
 main()

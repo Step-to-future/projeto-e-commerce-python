@@ -1,5 +1,6 @@
 import os
 import time
+from TextUtils import *
 count = 0
 # Chave de autenticação
 
@@ -8,21 +9,31 @@ autentication_key = "0000"
 
 def authenticate():
     for count in range(1,4):
-        print("Voce tem 3 tentativas de login")
-        print(f"Tentativa numero {count}")
+        os.system("cls")
+        gotoxy(1, 1)
+        drawBox(1, 1, 45, 10, YELLOW)
+        gotoxy(3, 3)
+        printColored("Voce tem 3 tentativas de login", GREEN, end="")
+        gotoxy(3, 5)
+        printColored(f"Tentativa numero {count}", YELLOW, end="")
+        gotoxy(3, 7)
         key = input("Digite a chave de autenticação: ")
         if key == autentication_key: 
-                print("Acesso liberado, entrando...")
-                time.sleep(.6)
-                os.system("cls")
+                os.system('cls')
+                gotoxy(3, 3)
+                print("#### Acesso liberado, entrando... ####")
+                time.sleep(1)
+                os.system('cls')
                 return True
 
         elif count == 3:
-                print("Voce errou as 3 tentativas. Acabaram suas chances")
+                gotoxy(3, 9)
+                printColored("Número máximo de tentativas excedido.", RED, end="")
                 exit()
         elif key != autentication_key:
-                print("Chave inválida!")
-                print("tente novamente")
+                gotoxy(3, 9)
+                printColored("Chave inválida!", YELLOW, end="\n")
+                printColored("tente novamente", YELLOW, end="")
                 os.system("cls")
         else:
             break
