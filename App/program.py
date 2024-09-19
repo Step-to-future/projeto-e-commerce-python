@@ -65,8 +65,22 @@ def create_new_product():
     os.system('cls')  # Clear screen
     main()
 
+
+
+
+
+
 def update_product():
-    pass
+    product = Product(code=product_code, name=product_name, description=information, buying_price=buy_price, selling_price=sell_price)
+    
+
+
+
+
+
+
+
+    
 
 def delete_product():
     pass
