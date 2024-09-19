@@ -48,7 +48,7 @@ def create_new_product():
     product_name = input("Digite o nome do produto: ")
     information = input("Descreva-o: ")
     buy_price = float(input("Digite o preco de compra: "))
-    sell_price = float(input("Digite o preco de compra: "))
+    sell_price = float(input("Digite o preco de venda: "))
 
     product = Product(code=last_product_code + 1, name=product_name, description=information, buying_price=buy_price, selling_price=sell_price)
 
@@ -73,8 +73,6 @@ def create_new_product():
 def update_product():
     product = Product(code=product_code, name=product_name, description=information, buying_price=buy_price, selling_price=sell_price)
     
-
-
 
 
 
