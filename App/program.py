@@ -227,65 +227,63 @@ def main():
         printGreen(menu7, end="")
         gotoxy(5, 18) 
         option = input("Digite o número da opção: ")
-        try:
-            if option == "1":
-                os.system('cls')
-                print(f"{'='*10}Cadastro de produto{'='*10}")
-                create_new_product()
-            elif option == "2":
-                os.system('cls')
-                show_all_products()
-            elif option == "3":
-                os.system('cls')
-                make_purchase()
-            elif option == "4":
-                # cancel_order()
-                gotoxy(5, 9)
-                printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-                gotoxy(5, 10)
-                input("Pressione ENTER para voltar ao menu...")
-                os.system('cls')
-                main()
-            elif option == "5":
-                # update_product()
-                gotoxy(5, 11)
-                printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-                gotoxy(5, 12)
-                input("Pressione ENTER para voltar ao menu...")
-                os.system('cls')
-                main()
-                pass
-            elif option == "6":
-                # delete_product()
-                gotoxy(5, 13)
-                printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-                gotoxy(5, 14)
-                input("Pressione ENTER para voltar ao menu...")
-                os.system('cls')
-                main()
-                pass
-            elif option == "7":
-                os.system('cls')
-                print("Saindo...")
-                time.sleep(1)
-                os.system('cls')
-                print("Até logo!")
-                time.sleep(1)
-                os.system('cls')
-                quit()
-            elif option == "":
-                os.system('cls')
-                print("@@@ O campo não pode ficar vazio @@@")
-                time.sleep(1)
-                os.system('cls')
-                main()
-            else:
-                os.system('cls')
-                print("@@@ Digite uma opção válida @@@")
-            break
-        except:
+
+
+        if str(option) == "1":
             os.system('cls')
-            print("@@@ Digite uma opção válida e numérica @@@")
+            print(f"{'='*10}Cadastro de produto{'='*10}")
+            create_new_product()
+        elif str(option) == "2":
+            os.system('cls')
+            show_all_products()
+        elif str(option) == "3":
+            os.system('cls')
+            make_purchase()
+        elif str(option) == "4":
+            # cancel_order()
+            gotoxy(5, 9)
+            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+            gotoxy(5, 10)
+            input("Pressione ENTER para voltar ao menu...")
+            os.system('cls')
+            main()
+        elif str(option) == "5":
+            # update_product()
+            gotoxy(5, 11)
+            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+            gotoxy(5, 12)
+            input("Pressione ENTER para voltar ao menu...")
+            os.system('cls')
+            main()
+            pass
+        elif str(option) == "6":
+            # delete_product()
+            gotoxy(5, 13)
+            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
+            gotoxy(5, 14)
+            input("Pressione ENTER para voltar ao menu...")
+            os.system('cls')
+            main()
+            pass
+        elif str(option) == "7":
+            os.system('cls')
+            print("Saindo...")
+            time.sleep(1)
+            os.system('cls')
+            print("Até logo!")
+            time.sleep(1)
+            os.system('cls')
+            quit()
+        elif str(option) == "":
+            os.system('cls')
+            print("@@@ O campo não pode ficar vazio @@@")
+            time.sleep(1)
+            os.system('cls')
+            main()
+        else:
+            os.system('cls')
+            print("@@@ Digite uma opção válida @@@")
+        break
 
 # Authenticate user
 authenticate()
