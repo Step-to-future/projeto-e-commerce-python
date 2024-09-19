@@ -108,6 +108,30 @@ def drawBroadBorderBox(x,y,w,h, color=WHITE):
                 elif j == y+h-1: print('▄')
             print(RESET,end="")
 
+
+# ╭────╮
+# │test│  
+# ╰────╯
+def drawRoundBorderBox(x, y, w, h, color=WHITE):
+    if (w <= 1) : return
+    if (h <=1) : return
+    for i in range(x , x + w):
+        for j in range(y , y + h):
+            gotoxy(i,j)
+            print(color,end="")
+            if i == x:
+                if j == y: print('╭')
+                elif j == y+h-1: print('╰')
+                else: print('│')
+            elif i == x+w-1:
+                if j == y: print('╮')
+                elif j < y+h-1: print('│')
+                else: print('╯')
+            else:
+                if j == y: print('─')
+                elif j == y+h-1: print('─')
+            print(RESET,end="")
+
 def printTitle(text:str, boxColor = WHITE, textColor = WHITE):
 	x = 60 - (int(len(text)/2))
 	drawBox(1,1,120,3,boxColor)

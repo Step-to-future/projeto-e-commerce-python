@@ -185,7 +185,7 @@ def show_all_products():
     main()
 
 def main():
-    drawBox(1, 1, 60, 20, GREEN)
+    drawRoundBorderBox(1, 1, 60, 20, GREEN)
     menu = f"MENU"
     menu1 = '1. Cadastrar produto'
     menu2 = '2. Exibir produtos'
