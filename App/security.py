@@ -36,9 +36,8 @@ def authenticate():
                 gotoxy(3, 10)
                 exit()
         elif key != autentication_key:
-                gotoxy(2, 9)
-                printColored("Chave inválida!", YELLOW, end="\n")
-                printColored("tente novamente", YELLOW, end="")
+                gotoxy(4, 9)
+                printColored("Chave inválida!", MAGENTA, end="\n")
                 time.sleep(1)
                 os.system("cls")
         else:

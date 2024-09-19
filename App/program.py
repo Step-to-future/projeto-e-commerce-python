@@ -65,20 +65,87 @@ def create_new_product():
     os.system('cls')  # Clear screen
     main()
 
-
-
-
-
-
+# Update product
 def update_product():
-    product = Product(code=product_code, name=product_name, description=information, buying_price=buy_price, selling_price=sell_price)
-    
+    # Abrir o arquivo para leitura e pegar todos os produtos
+    try:
+        with open("./data/products.txt", "r", encoding="UTF-8") as file:
+            lines = file.readlines()  # Ler todas as linhas do arquivo
+    except FileNotFoundError:
+        print("Erro: Arquivo de produtos não encontrado.")
+        return
+    except Exception as e:
+        print(f"Erro ao ler o arquivo: {e}")
+        return
 
+    # Pedir o código do produto a ser atualizado
+    os.system('cls')
+    drawBox(1, 1, 120, 25)
+    gotoxy(3, 3)
+    product_code = int(input("Digite o código do produto que deseja atualizar: "))
 
+    # Variável para armazenar se o produto foi encontrado ou não
+    produto_encontrado = False
 
+    # Novo conteúdo para ser escrito no arquivo
+    novo_conteudo = []
 
+    # Percorrer todas as linhas do arquivo
+    for line in lines:
+        # Quebrar a linha para obter os dados do produto
+        product_data = line.strip().split(";")
+        codigo_atual = int(product_data[0].split(":")[1])
 
-    
+        # Verificar se o código atual é o código do produto a ser atualizado
+        if codigo_atual == product_code:
+            produto_encontrado = True  # Produto foi encontrado
+
+            # Exibir os dados atuais do produto, um atributo por linha
+            gotoxy(3, 4)
+            print("Produto encontrado:")
+            gotoxy(3, 5); print(f"Código: {codigo_atual}")
+            gotoxy(3, 6); print(f"Nome: {product_data[1].split(':')[1]}")
+            gotoxy(3, 7); print(f"Descrição: {product_data[2].split(':')[1]}")
+            gotoxy(3, 8); print(f"Preço de compra: {product_data[3].split(':')[1]}")
+            gotoxy(3, 9); print(f"Preço de venda: {product_data[4].split(':')[1]}")
+            gotoxy(3, 10); print("Deixe o campo vazio se não quiser alterar um atributo.")
+
+            # Pegar os novos valores ou manter os antigos
+            gotoxy(3, 11)
+            novo_nome = input(f"Nome atual ({product_data[1].split(':')[1]}): ") or product_data[1].split(":")[1]
+            gotoxy(3, 12)
+            nova_descricao = input(f"Descrição atual ({product_data[2].split(':')[1]}): ") or product_data[2].split(":")[1]
+            gotoxy(3, 13)
+            novo_preco_compra = input(f"Preço de compra atual ({product_data[3].split(':')[1]}): ") or product_data[3].split(":")[1]
+            gotoxy(3, 14)
+            novo_preco_venda = input(f"Preço de venda atual ({product_data[4].split(':')[1]}): ") or product_data[4].split(":")[1]
+
+            # Recriar a linha com os dados atualizados
+            linha_atualizada = (f"Código: {codigo_atual}; Nome do produto: {novo_nome}; "
+                                f"Descrição: {nova_descricao}; Preço de compra: {novo_preco_compra}; "
+                                f"Preço de venda: {novo_preco_venda}\n")
+
+            # Adicionar a linha atualizada ao novo conteúdo
+            novo_conteudo.append(linha_atualizada)
+        else:
+            # Manter as linhas não modificadas
+            novo_conteudo.append(line)
+
+    # Se o produto foi encontrado, reescrever o arquivo com os novos dados
+    if produto_encontrado:
+        with open("./data/products.txt", "w", encoding="UTF-8") as file:
+            file.writelines(novo_conteudo)  # Reescreve o arquivo com os dados atualizados
+        gotoxy(3, 15)
+        print("Produto atualizado com sucesso!")
+    else:
+        gotoxy(3, 16)
+        print(f"Produto com o código {product_code} não foi encontrado.")
+
+    gotoxy(3, 17)
+    input("Pressione ENTER para voltar ao menu...")
+    os.system('cls')  # Limpar a tela
+    main()
+
 
 def delete_product():
     pass
@@ -197,7 +264,6 @@ def show_all_products():
     main()
 
 def main():
-    drawRoundBorderBox(1, 1, 60, 20, GREEN)
     menu = f"MENU"
     menu1 = '1. Cadastrar produto'
     menu2 = '2. Exibir produtos'
@@ -206,27 +272,21 @@ def main():
     menu5 = '5. Editar produto'
     menu6 = '6. Apagar produto'
     menu7 = '7. Sair'
-    
 
     while True:
-        gotoxy(26, 1) 
-        printGreen(menu, end="")
-        gotoxy(5, 3) 
-        printGreen(menu1, end="")
-        gotoxy(5, 5) 
-        printGreen(menu2, end="")
-        gotoxy(5, 7) 
-        printGreen(menu3, end="")
-        gotoxy(5, 9) 
-        printGreen(menu4, end="")
-        gotoxy(5, 11) 
-        printGreen(menu5, end="")
-        gotoxy(5, 13) 
-        printGreen(menu6, end="")
-        gotoxy(5, 15) 
-        printGreen(menu7, end="")
-        gotoxy(5, 18) 
-        option = input("Digite o número da opção: ")
+        os.system('cls') # Clear the screen
+        
+        drawRoundBorderBox(1, 1, 60, 20, GREEN)
+
+        gotoxy(26, 1); printGreen(menu, end="")
+        gotoxy(5, 3); printGreen(menu1, end="")
+        gotoxy(5, 5); printGreen(menu2, end="")
+        gotoxy(5, 7); printGreen(menu3, end="")
+        gotoxy(5, 9); printGreen(menu4, end="")
+        gotoxy(5, 11); printGreen(menu5, end="")
+        gotoxy(5, 13); printGreen(menu6, end="")
+        gotoxy(5, 15); printGreen(menu7, end="")
+        gotoxy(5, 18); option = input("Digite o número da opção: ")
 
 
         if option == "1":
@@ -248,14 +308,7 @@ def main():
             os.system('cls')
             main()
         elif option == "5":
-            # update_product()
-            gotoxy(5, 11)
-            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-            gotoxy(5, 12)
-            input("Pressione ENTER para voltar ao menu...")
-            os.system('cls')
-            main()
-            pass
+            update_product()
         elif option == "6":
             # delete_product()
             gotoxy(5, 13)
@@ -280,13 +333,19 @@ def main():
             quit()
         elif option == "":
             os.system('cls')
+            drawBox(1, 1, 60, 7)
+            gotoxy(10, 4)
             print("@@@ O campo não pode ficar vazio @@@")
             time.sleep(1)
             os.system('cls')
             main()
         else:
             os.system('cls')
+            drawBox(1, 1, 60, 7)
+            gotoxy(15, 4)
             print("@@@ Digite uma opção válida @@@")
+            time.sleep(1)
+            main()
         break
 
 # Authenticate user
