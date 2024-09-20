@@ -69,10 +69,10 @@ def create_new_product():
 # Update product
 
 def update_product():
-    # Abrir o arquivo para leitura e pegar todos os produtos
+    # Open the file to read and get all products
     try:
         with open("./data/products.txt", "r", encoding="UTF-8") as file:
-            lines = file.readlines()  # Ler todas as linhas do arquivo
+            lines = file.readlines()  # Read all lines of the file
     except FileNotFoundError:
         print("Erro: Arquivo de produtos não encontrado.")
         return
@@ -80,32 +80,29 @@ def update_product():
         print(f"Erro ao ler o arquivo: {e}")
         return
 
-    # Pedir o código do produto a ser atualizado
+    # Request the product code to be updated
     os.system('cls')
     drawBox(1, 1, 120, 25, MAGENTA)
     gotoxy(3, 3)
     product_code = int(input("Digite o código do produto que deseja atualizar: "))
 
-    # Variável para armazenar se o produto foi encontrado ou não
-    produto_encontrado = False
+    # Variable to store whether the product was found or not
+    product_found= False
 
-    # Novo conteúdo para ser escrito no arquivo
-    novo_conteudo = []
+    # New content to be written to the file
+    new_content = []
 
-    # Percorrer todas as linhas do arquivo
     for line in lines:
-        # Quebrar a linha para obter os dados do produto
         product_data = line.strip().split(";")
-        codigo_atual = int(product_data[0].split(":")[1])
+        present_code = int(product_data[0].split(":")[1])
 
-        # Verificar se o código atual é o código do produto a ser atualizado
-        if codigo_atual == product_code:
-            produto_encontrado = True  # Produto foi encontrado
+        if present_code == product_code:
+            product_found = True  
 
             # Exibir os dados atuais do produto, um atributo por linha
             gotoxy(3, 4)
             print("Produto encontrado:")
-            gotoxy(3, 5); print(f"Código: {codigo_atual}")
+            gotoxy(3, 5); print(f"Código: {present_code}")
             gotoxy(3, 6); print(f"Nome: {product_data[1].split(':')[1]}")
             gotoxy(3, 7); print(f"Descrição: {product_data[2].split(':')[1]}")
             gotoxy(3, 8); print(f"Preço de compra: {product_data[3].split(':')[1]}")
@@ -114,29 +111,29 @@ def update_product():
 
             # Pegar os novos valores ou manter os antigos
             gotoxy(3, 11)
-            novo_nome = input(f"Nome atual ({product_data[1].split(':')[1]}): ") or product_data[1].split(":")[1]
+            new_name = input(f"Nome atual ({product_data[1].split(':')[1]}): ") or product_data[1].split(":")[1]
             gotoxy(3, 12)
-            nova_descricao = input(f"Descrição atual ({product_data[2].split(':')[1]}): ") or product_data[2].split(":")[1]
+            new_description = input(f"Descrição atual ({product_data[2].split(':')[1]}): ") or product_data[2].split(":")[1]
             gotoxy(3, 13)
-            novo_preco_compra = input(f"Preço de compra atual ({product_data[3].split(':')[1]}): ") or product_data[3].split(":")[1]
+            new_buy_price = input(f"Preço de compra atual ({product_data[3].split(':')[1]}): ") or product_data[3].split(":")[1]
             gotoxy(3, 14)
-            novo_preco_venda = input(f"Preço de venda atual ({product_data[4].split(':')[1]}): ") or product_data[4].split(":")[1]
+            new_sell_price = input(f"Preço de venda atual ({product_data[4].split(':')[1]}): ") or product_data[4].split(":")[1]
 
             # Recriar a linha com os dados atualizados
-            linha_atualizada = (f"Código: {codigo_atual}; Nome do produto: {novo_nome}; "
-                                f"Descrição: {nova_descricao}; Preço de compra: {novo_preco_compra}; "
-                                f"Preço de venda: {novo_preco_venda}\n")
+            updated_line = (f"Código: {present_code}; Nome do produto: {new_name}; "
+                                f"Descrição: {new_description}; Preço de compra: {new_buy_price}; "
+                                f"Preço de venda: {new_sell_price}\n")
 
             # Adicionar a linha atualizada ao novo conteúdo
-            novo_conteudo.append(linha_atualizada)
+            new_content.append(updated_line)
         else:
             # Manter as linhas não modificadas
-            novo_conteudo.append(line)
+            new_content.append(line)
 
     # Se o produto foi encontrado, reescrever o arquivo com os novos dados
-    if produto_encontrado:
+    if product_found:
         with open("./data/products.txt", "w", encoding="UTF-8") as file:
-            file.writelines(novo_conteudo)  # Reescreve o arquivo com os dados atualizados
+            file.writelines(new_content)  # Reescreve o arquivo com os dados atualizados
         gotoxy(3, 15)
         print("Produto atualizado com sucesso!")
     else:
@@ -159,7 +156,7 @@ def make_purchase():
     printTitle("Realizar Compra", BRIGHT_GREEN, BRIGHT_YELLOW)
     
     try:
-        # Lê os produtos do arquivo
+        # Read products from the archive
         with open("./data/products.txt", "r", encoding="UTF-8") as file:
             products = []
             for line in file:
@@ -181,16 +178,17 @@ def make_purchase():
         print(f"Erro ao ler o arquivo: {e}")
         return
 
-    # Exibe produtos cadastrados
+    # Display registered products
     print("\nProdutos cadastrados:")
     for product in products:
         print(f"{product.code} - {product.name}: R$ {product.selling_price:.2f}")
     
-    # Lógica de compra
+    # Purchase logic
     product_order = []
     total_value = 0.0
 
-    # Expressão regular para validar a data no formato dd/mm/aaaa
+    # Regular expression to validate the date in dd/mm/yyyy format
+
     date_regex = re.compile(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$")
 
     order = input("Digite o código do produto desejado (ou '0' para cancelar): ")
@@ -202,13 +200,13 @@ def make_purchase():
     try:
         order_code = int(order)
 
-        # Verifica se o código do produto existe na lista de produtos
+        # Checks if the product code exists in the product list
         selected_product = next((product for product in products if product.code == order_code), None)
 
         if selected_product:
             product_ammount = int(input("Digite a quantidade: "))
 
-            # Validação da data
+            # Date validation
             while True:
                 order_date = input("Digite a data da compra no formato dd/mm/aaaa: ")
                 if date_regex.match(order_date):
@@ -216,7 +214,7 @@ def make_purchase():
                 else:
                     print("Data inválida. Insira a data no formato correto (dd/mm/aaaa).")
 
-            # Calcula o preço e adiciona o pedido
+            #  Calculate price and add order
             order_price = selected_product.selling_price * product_ammount
             total_value += order_price
             order_id = int(time.time())
@@ -224,24 +222,24 @@ def make_purchase():
             new_order = Order(order_id, order_code, product_ammount, order_price, order_date)
             product_order.append(new_order)
 
-            # Grava o pedido no arquivo
+            # Save the order to the file
             with open("./data/orders.txt", "a", encoding="UTF-8") as orders_file:
                 orders_file.write(f"ID: {order_id}; Codigo: {order_code}; Quantidade: {product_ammount}; PrecoTotal: {order_price:.2f}; Data: {order_date}\n")
 
             print(f"Produto '{selected_product.name}' adicionado ao carrinho. Preço total: R$ {order_price:.2f}")
 
         else:
-            # Se o código não for encontrado, exibe mensagem de erro e interrompe a operação
+            # If the code is not found, it displays an error message and stops the operation
             printTitle("Produto não encontrado", RED, RED)
             time.sleep(2)
-            make_purchase()  # reinicia a compra
+            make_purchase()  # restart to purchase
 
     except ValueError:
         printTitle("Entrada inválida! Por favor, insira números válidos.", RED, RED)
         time.sleep(2)
-        make_purchase() # reinicia a compra
+        make_purchase() # restart to purchase
 
-    # Exibir o resumo da compra
+    # View purchase summary
     clearScreen()
     printTitle("Resumo da Compra", MAGENTA, MAGENTA)
     
