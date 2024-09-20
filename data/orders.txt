@@ -1,4 +1,2 @@
-ID: 1726789147; Codigo: 1; Quantidade: 1; PrecoTotal: 25.45; Data: 20/10/2024
-ID: 1726789287; Codigo: 1; Quantidade: 2; PrecoTotal: 50.90; Data: 20/10/1998
-ID: 1726789332; Codigo: 6; Quantidade: 1; PrecoTotal: 259.00; Data: 20/06/2021
-ID: 1726789362; Codigo: 3; Quantidade: 1; PrecoTotal: 69.99; Data: 20/09/2021
+ID: 1726791910; Codigo: 3; Quantidade: 1; PrecoTotal: 69.99; Data: 16/01/2022
+ID: 1726791927; Codigo: 2; Quantidade: 1; PrecoTotal: 244.50; Data: 14/04/2007

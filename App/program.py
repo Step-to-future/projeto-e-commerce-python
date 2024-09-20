@@ -226,7 +226,7 @@ def make_purchase():
 
             # Grava o pedido no arquivo
             with open("./data/orders.txt", "a", encoding="UTF-8") as orders_file:
-                orders_file.write(f"ID:{order_id};Codigo:{order_code};Quantidade:{product_ammount};PrecoTotal:{order_price:.2f};Data:{order_date}\n")
+                orders_file.write(f"ID: {order_id}; Codigo: {order_code}; Quantidade: {product_ammount}; PrecoTotal: {order_price:.2f}; Data: {order_date}\n")
 
             print(f"Produto '{selected_product.name}' adicionado ao carrinho. Preço total: R$ {order_price:.2f}")
 
@@ -243,13 +243,13 @@ def make_purchase():
 
     # Exibir o resumo da compra
     clearScreen()
-    print("Resumo da Compra")
+    printTitle("Resumo da Compra", MAGENTA, MAGENTA)
     
     if product_order:
         for order in product_order:
             drawBox(1, 4, 120, 12)
             gotoxy(2, 5)
-            print(f"Produto ID: {order.product_id}")
+            print(f"ID do produto: {order.product_id}")
             gotoxy(2, 6)
             print(f"Quantidade: {order.product_ammount}")
             gotoxy(2, 7)
