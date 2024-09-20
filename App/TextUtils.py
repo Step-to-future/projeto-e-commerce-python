@@ -148,3 +148,19 @@ def drawInfoBox(text:str = "", textColor = WHITE):
 	drawBox(1,27,120,3,DARK_GRAY)
 	gotoxy(2,28)
 	printColored(text, textColor, end="")
+
+def drawProductBox(x, y, w, product, boxColor=WHITE, textColor=WHITE):
+    """
+    Desenha uma única caixa para cada produto com todas as informações.
+    """
+    drawBox(x, y, w, 5, boxColor)
+    gotoxy(x+2, y+1)
+    printColored(f"Produto ID: {product.code}", textColor)
+    gotoxy(x+2, y+2)
+    printColored(f"Nome: {product.name}", textColor)
+    gotoxy(x+2, y+3)
+    printColored(f"Preço: R$ {product.selling_price:.2f}", textColor)
+
+def drawInfoBox(text:str = "", textColor = WHITE):
+    drawBox(1, 27, 120, 3, DARK_GRAY)
+    gotoxy(2, 28)

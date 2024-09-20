@@ -65,7 +65,9 @@ def create_new_product():
     os.system('cls')  # Clear screen
     main()
 
+
 # Update product
+
 def update_product():
     # Abrir o arquivo para leitura e pegar todos os produtos
     try:
@@ -80,7 +82,7 @@ def update_product():
 
     # Pedir o código do produto a ser atualizado
     os.system('cls')
-    drawBox(1, 1, 120, 25)
+    drawBox(1, 1, 120, 25, MAGENTA)
     gotoxy(3, 3)
     product_code = int(input("Digite o código do produto que deseja atualizar: "))
 
@@ -152,27 +154,26 @@ def delete_product():
 
 def cancel_order():
     pass
-
 def make_purchase():
-
+    clearScreen()
+    printTitle("Realizar Compra", BRIGHT_GREEN, BRIGHT_YELLOW)
+    
     try:
-        # Abrindo o arquivo de produtos
+        # Lê os produtos do arquivo
         with open("./data/products.txt", "r", encoding="UTF-8") as file:
-            products = []  # Lista de produtos
-
-            # Lendo os produtos do arquivo e criando objetos Product
+            products = []
             for line in file:
-                product_data = line.strip().split(";")  # Split line on semicolon (';')
-                if len(product_data) == 5:  # Verifica se há 5 campos no produto
-                    product = Product(
-                        code=int(product_data[0].split(":")[1]),
-                        name=product_data[1].split(":")[1],
-                        description=product_data[2].split(":")[1],
-                        buying_price=float(product_data[3].split(":")[1]),
-                        selling_price=float(product_data[4].split(":")[1]),
-                    )
-                    products.append(product) 
-
+                if line.strip():
+                    product_data = line.strip().split(";")
+                    if len(product_data) == 5:
+                        product = Product(
+                            code=int(product_data[0].split(":")[1]),
+                            name=product_data[1].split(":")[1],
+                            description=product_data[2].split(":")[1],
+                            buying_price=float(product_data[3].split(":")[1]),
+                            selling_price=float(product_data[4].split(":")[1]),
+                        )
+                        products.append(product)
     except FileNotFoundError:
         print("Erro: Arquivo de produtos não encontrado.")
         return
@@ -180,62 +181,91 @@ def make_purchase():
         print(f"Erro ao ler o arquivo: {e}")
         return
 
-    # Exibindo os produtos cadastrados
+    # Exibe produtos cadastrados
     print("\nProdutos cadastrados:")
     for product in products:
-        print(f"Produto: {product.name}\nDescrição: {product.description}\nCódigo: {product.code}\nPreço de compra: R$ {product.buying_price}\nPreço de venda: R$ {product.selling_price}\n{'='*80}")
-
-    # Cart and total value
+        print(f"{product.code} - {product.name}: R$ {product.selling_price:.2f}")
+    
+    # Lógica de compra
     product_order = []
     total_value = 0.0
 
+    # Expressão regular para validar a data no formato dd/mm/aaaa
+    date_regex = re.compile(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$")
 
-    order = input("Digite o código do produto desejado (ou '0' para voltar ao menu): ")
-    pattern = r'^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$'
+    order = input("Digite o código do produto desejado (ou '0' para cancelar): ")
 
-    if order == '0':  # Checkout if zero
-        os.system('cls')
-        main()
-    
+    if order == '0':
+        print("Compra cancelada.")
+        return
+
     try:
-        # Convert to int the order code
         order_code = int(order)
-        product_ammount = int(input("Digite a quantidade: "))
-        order_date = input("Digite a data da compra no formato dd/mm/aaaa: ")
-        
-        # Search for the product by code
+
+        # Verifica se o código do produto existe na lista de produtos
         selected_product = next((product for product in products if product.code == order_code), None)
 
-        pattern_true = re.match(pattern, order_date)
-        
         if selected_product:
-            if not pattern_true:
-                print("@@@@ Data inválida... @@@@")
-            else:
-                product_order.append(selected_product)
-                total_value += selected_product.selling_price * product_ammount
-                print(f"Produto: '{selected_product.name} ' adicionado ao carrinho. Preço: R$ {(selected_product.selling_price * product_ammount):.2f} ({selected_product.selling_price} por unidade)")
+            product_ammount = int(input("Digite a quantidade: "))
+
+            # Validação da data
+            while True:
+                order_date = input("Digite a data da compra no formato dd/mm/aaaa: ")
+                if date_regex.match(order_date):
+                    break
+                else:
+                    print("Data inválida. Insira a data no formato correto (dd/mm/aaaa).")
+
+            # Calcula o preço e adiciona o pedido
+            order_price = selected_product.selling_price * product_ammount
+            total_value += order_price
+            order_id = int(time.time())
+
+            new_order = Order(order_id, order_code, product_ammount, order_price, order_date)
+            product_order.append(new_order)
+
+            # Grava o pedido no arquivo
+            with open("./data/orders.txt", "a", encoding="UTF-8") as orders_file:
+                orders_file.write(f"ID:{order_id};Codigo:{order_code};Quantidade:{product_ammount};PrecoTotal:{order_price:.2f};Data:{order_date}\n")
+
+            print(f"Produto '{selected_product.name}' adicionado ao carrinho. Preço total: R$ {order_price:.2f}")
+
         else:
-            print("Código de produto inválido. Tente novamente.")
-    
+            # Se o código não for encontrado, exibe mensagem de erro e interrompe a operação
+            printTitle("Produto não encontrado", RED, RED)
+            time.sleep(2)
+            make_purchase()  # reinicia a compra
+
     except ValueError:
-        print("Código inválido! Digite um número.")
+        printTitle("Entrada inválida! Por favor, insira números válidos.", RED, RED)
+        time.sleep(2)
+        make_purchase() # reinicia a compra
 
-    # Checkout
+    # Exibir o resumo da compra
+    clearScreen()
+    print("Resumo da Compra")
+    
     if product_order:
-        print("\nCompra finalizada!")
-        print("Itens no carrinho:")
-        for product in product_order:
-            print(f"- {product.name}: R$ {product.selling_price:.2f}")
-        
-        print(f"Total: R$ {total_value:.2f}")
+        for order in product_order:
+            drawBox(1, 4, 120, 12)
+            gotoxy(2, 5)
+            print(f"Produto ID: {order.product_id}")
+            gotoxy(2, 6)
+            print(f"Quantidade: {order.product_ammount}")
+            gotoxy(2, 7)
+            print(f"Preço total: R$ {order.order_price:.2f}")
+            gotoxy(2, 8)
+            print(f"Data: R$ {order.order_date}")
+            gotoxy(2, 9)
+            print(f"Valor total da compra: R$ {total_value:.2f}")
     else:
-        print("\nNenhum produto foi adicionado ao carrinho.")
-
-    input("\nPressione Enter para voltar ao menu principal...")
-    os.system('cls')  # Clear the screen
+        gotoxy(2, 10)
+        printColored("Nenhum produto foi adicionado ao carrinho.", RED, end="")
+    
+    gotoxy(2, 12)
+    print(input("Pressione Enter para voltar ao menu principal..."))
+    clearScreen()
     main()
-
 # Show products list
 def show_all_products():
     file = open("./data/products.txt", "r", encoding="UTF-8")
@@ -243,7 +273,9 @@ def show_all_products():
     if not file:
         print("Nenhum produto encontrado...")
     else:
-        print("\nProdutos cadastrados:")
+        printTitle("Produtos cadastrados: ", GREEN, WHITE)
+        print("\n")
+
         for line in file:
             # Create a Product object from each line
             product_data = line.strip().split(";")  # Split line on semicolon (';')
@@ -254,9 +286,8 @@ def show_all_products():
                 buying_price=float(product_data[3].split(":")[1]),
                 selling_price=float(product_data[4].split(":")[1]),
             )
-
             # Print product details using the Product object
-            print(f"Produto: {product.name}\nDescrição: {product.description}\nCódigo: {product.code}\nPreço de compra: R$ {product.buying_price}\nPreço de venda: R$ {product.selling_price}\n{'='*80}")
+            print(f"Produto: {product.name}\nDescrição: {product.description}\nCódigo: {product.code}\nPreço de compra: R$ {product.buying_price}\nPreço de venda: R$ {product.selling_price}\n{'─'*80}")
 
     file.close()  # Close the file after processing
     input("\nPressione ENTER para continuar...")
