@@ -1,0 +1,2 @@
+Venda cancelada: ID: 1; Produto: Intel Core I9; Preço Unitário: 1499.99; Quantidade: 9; Total: 13499.91; Data: 20/09/2024; Método de Pagamento: Cheque
+Venda cancelada: ID: 3; Produto: Intel Core I3 14gen; Preço Unitário: 399.40; Quantidade: 1; Total: 399.40; Data: 23/05/2022; Método de Pagamento: Débito
