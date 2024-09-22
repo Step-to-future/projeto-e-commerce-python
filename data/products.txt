@@ -1,6 +1,5 @@
-Código: 1; Nome do produto: Chave phillips; Descrição: Chave de aço inoxidável; Preço de compra: 19.99; Preço de venda: 25.45
-Código: 2; Nome do produto: Escada; Descrição: Escada de alumínio; Preço de compra: 179.9; Preço de venda: 244.5
-Código: 3; Nome do produto: Martelo; Descrição: Martelo inoxidável; Preço de compra: 22.99; Preço de venda: 69.99
-Código: 4; Nome do produto: Pregos de Aço; Descrição: Pregos de Aço - Caixa 100 un.; Preço de compra: 15.16; Preço de venda: 22.55
-Código: 5; Nome do produto: Porta de pinheiro; Descrição: Porta de madeira com medidas 2,10m x 1.2m; Preço de compra: 145.9; Preço de venda: 169.58
-Código: 6; Nome do produto: Martelo; Descrição: Martelo; Preço de compra: 256.0; Preço de venda: 259.0
+code:2;name: Intel Core I9;description: Processador Intel Core I9 - 4ghz 16mb cache;buying_price:549.5;selling_price:1499.99
+Código: 3; Nome do produto: Placa Mãe AsRock B450M; Descrição: Placa mão AM4 2xDDR4 slots nvme pcie; Preço de compra: 549.9; Preço de venda: 659.77
+Código: 4; Nome do produto: Intel Core I3 14gen; Descrição:  Processador Intel Core de 3.2Ghz 2core 8threads; Preço de compra:  299.8; Preço de venda:  399.4
+Código: 5; Nome: Memória RAM DDR5 4200mhz 32Gb; Descrição: Memória RAM - Módulo: 1x 32GB - Clock: 4200mhz - Corsair; Preço Compra: 399.5; Preço Venda: 649.8
+Código: 6; Nome: SSD NVMe N.2 Crucual 256Gb; Descrição: Ssd pci express - Capacidade: 256 Gigabytes - Fabricante: Crucial; Preço Compra: 199.69; Preço Venda: 251.4

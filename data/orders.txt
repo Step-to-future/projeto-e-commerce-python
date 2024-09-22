@@ -1,3 +1,4 @@
-ID: 1726791910; Codigo: 3; Quantidade: 1; PrecoTotal: 69.99; Data: 16/01/2022
-ID: 1726791927; Codigo: 2; Quantidade: 1; PrecoTotal: 244.50; Data: 14/04/2007
-ID: 1726792901; Codigo: 1; Quantidade: 2; PrecoTotal: 50.90; Data: 20/03/2023
+ID da compra: 1; Código: 3; Quantidade: 2; Preço Total: 1319.54; Data: 20/09/2024
+ID da compra: 2; Código: 4; Quantidade: 25; Preço Compra Total: 7495.00; Preço Venda Total: 9985.00; Data: 20/09/2024
+ID da compra: 3; Código: 5; Quantidade: 120; Preço Compra Total: 47940.00; Preço Venda Total: 77976.00; Data: 21/09/2024
+ID da compra: 4; Código: 6; Quantidade: 20; Preço Compra Total: 3993.80; Preço Venda Total: 5028.00; Data: 21/09/2024

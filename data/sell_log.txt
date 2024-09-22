@@ -1,0 +1,1 @@
+ID: 2; Produto: Memória RAM DDR5 4200mhz 32Gb; Preço Unitário: 649.80; Quantidade: 4; Total: 2599.20; Data: 20/02/2026; Método de Pagamento: Cheque

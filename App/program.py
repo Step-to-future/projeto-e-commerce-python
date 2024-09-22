@@ -3,68 +3,46 @@ from security import *
 import time
 import re
 from TextUtils import *
+from datetime import datetime
 
 class Product:
-    def __init__(self, code: int, name: str, description: str, buying_price: float, selling_price: float):
-        # Definindo os atributos da instância
+    def __init__(self, code, name, description, buying_price, selling_price):
         self.code = code
         self.name = name
         self.description = description
         self.buying_price = buying_price
         self.selling_price = selling_price
-
+    
     def __str__(self):
-        return f"Código: {self.code}; Nome do produto: {self.name}; Descrição: {self.description}; Preço de compra: {self.buying_price}; Preço de venda: {self.selling_price}\n"
-        
+        return f"Código: {self.code}; Nome: {self.name}; Descrição: {self.description}; Preço Compra: {self.buying_price}; Preço Venda: {self.selling_price}"
+
 class Order:
-    def __init__(self, order_id: int, product_id: int, product_ammount: int, order_price: float, order_date: str):
+    def __init__(self, order_id, product_id, product_amount, order_price, order_date):
         self.order_id = order_id
         self.product_id = product_id
-        self.product_ammount = product_ammount
+        self.product_amount = product_amount
         self.order_price = order_price
         self.order_date = order_date
 
+global_sell_count = 0
+
+class Sell:
+    def __init__(self, id, item, price, quantity, date, payment_method):
+        global global_sell_count
+        global_sell_count += 1  # Incrementa o contador
+        self.id = global_sell_count  # Atribui o ID atual
+        self.item = item
+        self.id = id
+        self.price = price
+        self.quantity = quantity
+        self.total_price = price * quantity
+        self.date = date
+        self.payment_method = payment_method
+
     def __str__(self):
-        return f"ID do pedido: {self.order_id}; ID do produto: {self.product_id}; Preço: {self.order_price:.2f}; Data: {self.order_date}\n"
-
-# Create product
-
-def create_new_product():
-    file = open("./data/products.txt", "a+", encoding="UTF-8")
-    file.readlines()  # Read existing lines (optional)
-    file.seek(0)
-
-    # Track the last used product code
-    last_product_code = 0
-    try:
-        # Read the last used code from the file (if it exists)
-        with open("./data/products.txt", "r", encoding="UTF-8") as f:
-            last_line = f.readlines()[-1]  # Read the last line
-            if last_line:
-                last_product_code = int(last_line.strip().split(";")[0].split(":")[1])
-    except FileNotFoundError:
-        pass  # Ignore if file doesn't exist
-
-    product_name = input("Digite o nome do produto: ")
-    information = input("Descreva-o: ")
-    buy_price = float(input("Digite o preco de compra: "))
-    sell_price = float(input("Digite o preco de venda: "))
-
-    product = Product(code=last_product_code + 1, name=product_name, description=information, buying_price=buy_price, selling_price=sell_price)
-
-    if not product in file:
-        file.write(str(product))
-        file.flush()
-        file.close()
-
-    else:
-        print("@@@ Erro: Informação inconsistente ou produto já cadastrado. Tente novamente... @@@")
-        input("Pressione ENTER para voltar ao menu...")
-        os.system('cls')  # Clear screen
-        main()
-    os.system('cls')  # Clear screen
-    main()
-
+        return (f"ID: {self.id}; Produto: {self.item}; Preço Unitário: {self.price:.2f}; "
+                f"Quantidade: {self.quantity}; Total: {self.total_price:.2f}; "
+                f"Data: {self.date}; Método de Pagamento: {self.payment_method}")
 
 # Update product
 
@@ -145,126 +123,260 @@ def update_product():
     os.system('cls')  # Limpar a tela
     main()
 
+# Delete product
 
 def delete_product():
-    pass
+    # Abrir o arquivo com os produtos cadastrados
+    with open("./data/products.txt", "r", encoding="UTF-8") as file:
+        lines = file.readlines()
+
+    # Se o arquivo estiver vazio
+    if not lines:
+        print("Nenhum produto encontrado...")
+        return
+
+    # Exibir os produtos cadastrados
+    printTitle("Produtos cadastrados: ", GREEN, WHITE)
+    print("\n")
+    products = []
+    for line in lines:
+        # Criar um objeto Product para cada linha do arquivo
+        product_data = line.strip().split(";")  # Separar a linha pelo ';'
+        product = Product(
+            code=int(product_data[0].split(":")[1]),
+            name=product_data[1].split(":")[1],
+            description=product_data[2].split(":")[1],
+            buying_price=float(product_data[3].split(":")[1]),
+            selling_price=float(product_data[4].split(":")[1]),
+        )
+        products.append(product)
+
+        # Exibir os detalhes do produto
+        print(f"Produto: {product.name}\nDescrição: {product.description}\nCódigo: {product.code}\nPreço de compra: R$ {product.buying_price}\nPreço de venda: R$ {product.selling_price}\n{'─'*80}")
+
+    # Receber o código do produto que o usuário deseja apagar
+    try:
+        product_code = int(input("Digite o código do produto que deseja apagar: "))
+    except ValueError:
+        print("Código inválido! Por favor, insira um número inteiro.")
+        return
+    
+    # Verificar se o produto com o código fornecido existe
+    product_exists = any(p.code == product_code for p in products)
+    if not product_exists:
+        os.system('cls')
+        printTitle("Erro: ", RED)
+        drawBox(1, 4, 120, 6, MAGENTA)
+        gotoxy(2, 5)
+        print(f"Produto com código {product_code} não encontrado.")
+        gotoxy(2, 8)
+        print(input("Pressione ENTER para voltar ao menu..."))
+        os.system('cls')
+        main()
+        return
+
+    # Confirmar a remoção
+    os.system('cls')
+    printTitle(f"Confirmar a remoção de produto de código: {product_code}...", RED, WHITE)
+    
+    # Filtrar os produtos para remover o produto com o código fornecido
+    products = [p for p in products if p.code != product_code]
+
+    # Atualizar o arquivo com os produtos restantes
+    with open("./data/products.txt", "w", encoding="UTF-8") as file:
+        for product in products:
+            # Reescrever cada produto no arquivo
+            file.write(f"code:{product.code};name:{product.name};description:{product.description};buying_price:{product.buying_price};selling_price:{product.selling_price}\n")
+
+    # Exibir a mensagem de sucesso
+    drawBox(1, 4, 120, 6, MAGENTA)
+    gotoxy(2, 5)
+    print(f"Produto de código {product_code} removido com sucesso.")
+    
+    gotoxy(2, 8)
+    print(input("Pressione ENTER para voltar ao menu..."))
+    os.system('cls')
+    main()
+
 
 def cancel_order():
-    pass
-def make_purchase():
-    clearScreen()
-    printTitle("Realizar Compra", BRIGHT_GREEN, BRIGHT_YELLOW)
-    
     try:
-        # Read products from the archive
-        with open("./data/products.txt", "r", encoding="UTF-8") as file:
-            products = []
-            for line in file:
-                if line.strip():
-                    product_data = line.strip().split(";")
-                    if len(product_data) == 5:
-                        product = Product(
-                            code=int(product_data[0].split(":")[1]),
-                            name=product_data[1].split(":")[1],
-                            description=product_data[2].split(":")[1],
-                            buying_price=float(product_data[3].split(":")[1]),
-                            selling_price=float(product_data[4].split(":")[1]),
-                        )
-                        products.append(product)
+        # Read orders from the file
+        with open("./data/orders.txt", "r", encoding="UTF-8") as file:
+            orders = file.readlines()
     except FileNotFoundError:
-        print("Erro: Arquivo de produtos não encontrado.")
+        print("Erro: Arquivo de pedidos não encontrado.")
         return
     except Exception as e:
         print(f"Erro ao ler o arquivo: {e}")
         return
 
-    # Display registered products
-    print("\nProdutos cadastrados:")
-    for product in products:
-        print(f"{product.code} - {product.name}: R$ {product.selling_price:.2f}")
-    
-    # Purchase logic
-    product_order = []
-    total_value = 0.0
-
-    # Regular expression to validate the date in dd/mm/yyyy format
-
-    date_regex = re.compile(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$")
-
-    order = input("Digite o código do produto desejado (ou '0' para cancelar): ")
-
-    if order == '0':
-        print("Compra cancelada.")
+    if not orders:
+        print("Nenhum pedido encontrado.")
+        input("Pressione ENTER para voltar ao menu...")
+        os.system('cls')
+        main()
         return
 
+    print("Pedidos cadastrados:")
+    for line in orders:
+        order_data = line.strip().split(";")
+        order_id = order_data[0].split(":")[1].strip()
+        print(f"ID do pedido: {order_id}")
+
+    order_id_to_cancel = input("Digite o ID do pedido que deseja cancelar: ").strip()
+
+    # Check if the order ID exists
+    order_found = False
+    new_content = []
+
+    for line in orders:
+        order_data = line.strip().split(";")
+        current_order_id = order_data[0].split(":")[1].strip()
+
+        if current_order_id == order_id_to_cancel:
+            order_found = True
+            print(f"Pedido {order_id_to_cancel} cancelado com sucesso!")
+            continue  # Skip the line to remove the order
+        
+        new_content.append(line)  # Keep orders that are not canceled
+
+    # Rewrite the file without the canceled order
+    if order_found:
+        with open("./data/orders.txt", "w", encoding="UTF-8") as file:
+            file.writelines(new_content)
+    else:
+        print(f"Pedido com ID {order_id_to_cancel} não encontrado.")
+
+    input("Pressione ENTER para voltar ao menu...")
+    os.system('cls')
+    main()
+
+
+def register_product_and_purchase():
+    # Abrir o arquivo de produtos para escrita
     try:
-        order_code = int(order)
+        with open("./data/products.txt", "a+", encoding="UTF-8") as products_file:
+            products_file.seek(0)
+            product_lines = products_file.readlines()
 
-        # Checks if the product code exists in the product list
-        selected_product = next((product for product in products if product.code == order_code), None)
+            # Track the last used product code
+            last_product_code = 0
+            if product_lines:
+                last_product_line = product_lines[-1]
+                last_product_code = int(last_product_line.strip().split(";")[0].split(":")[1])
 
-        if selected_product:
-            product_ammount = int(input("Digite a quantidade: "))
+            # Solicitar dados do produto
+            printTitle("Ordem de compra", GREEN, WHITE)
+            drawBox(1, 5, 120, 16, MAGENTA)
+            gotoxy(2, 6)
+            product_name = input("Digite o nome do produto: ")
+            gotoxy(2, 7)
+            product_desc = input("Descreva o produto: ")
+            gotoxy(2, 8)
+            buying_price = float(input("Digite o preço de compra do produto: "))
+            gotoxy(2, 9)
+            selling_price = float(input("Digite o preço de venda do produto: "))
+            gotoxy(2, 10)
+            product_amount = int(input("Digite a quantidade comprada: "))
 
-            # Date validation
+            # Validar data da compra
+            date_regex = re.compile(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$")
             while True:
+                gotoxy(2, 11)
                 order_date = input("Digite a data da compra no formato dd/mm/aaaa: ")
                 if date_regex.match(order_date):
                     break
                 else:
-                    print("Data inválida. Insira a data no formato correto (dd/mm/aaaa).")
+                    print("Data inválida. Insira no formato correto (dd/mm/aaaa).")
 
-            #  Calculate price and add order
-            order_price = selected_product.selling_price * product_ammount
-            total_value += order_price
-            order_id = int(time.time())
+            # Calcular o valor total de compra (quantidade * preço de compra)
+            total_buying_value = buying_price * product_amount
 
-            new_order = Order(order_id, order_code, product_ammount, order_price, order_date)
-            product_order.append(new_order)
+            # Criar novo produto e adicionar ao arquivo
+            new_product = Product(code=last_product_code + 1, name=product_name, description=product_desc, buying_price=buying_price, selling_price=selling_price)
+            products_file.write(f"{new_product}\n")
+            gotoxy(2, 12)
+            print(f"Produto '{new_product.name}' registrado com sucesso!")
 
-            # Save the order to the file
-            with open("./data/orders.txt", "a", encoding="UTF-8") as orders_file:
-                orders_file.write(f"ID: {order_id}; Codigo: {order_code}; Quantidade: {product_ammount}; PrecoTotal: {order_price:.2f}; Data: {order_date}\n")
+    except Exception as e:
+        gotoxy(2, 12)
+        print(f"Erro ao manipular o arquivo de produtos: {e}")
+        return
 
-            print(f"Produto '{selected_product.name}' adicionado ao carrinho. Preço total: R$ {order_price:.2f}")
+    # Registrar no arquivo de pedidos
+    try:
+        with open("./data/orders.txt", "a+", encoding="UTF-8") as orders_file:
+            orders_file.seek(0)
+            order_lines = orders_file.readlines()
 
-        else:
-            # If the code is not found, it displays an error message and stops the operation
-            printTitle("Produto não encontrado", RED, RED)
-            time.sleep(2)
-            make_purchase()  # restart to purchase
+            # Track the last used order ID
+            last_order_id = 0
+            if order_lines:
+                last_order_line = order_lines[-1]
+                last_order_id = int(last_order_line.strip().split(";")[0].split(":")[1])
 
-    except ValueError:
-        printTitle("Entrada inválida! Por favor, insira números válidos.", RED, RED)
-        time.sleep(2)
-        make_purchase() # restart to purchase
+            # Calcular o preço total da compra (preço de venda * quantidade)
+            total_selling_value = selling_price * product_amount
 
-    # View purchase summary
-    clearScreen()
-    printTitle("Resumo da Compra", MAGENTA, MAGENTA)
-    
-    if product_order:
-        for order in product_order:
-            drawBox(1, 4, 120, 12)
-            gotoxy(2, 5)
-            print(f"ID do produto: {order.product_id}")
-            gotoxy(2, 6)
-            print(f"Quantidade: {order.product_ammount}")
-            gotoxy(2, 7)
-            print(f"Preço total: R$ {order.order_price:.2f}")
-            gotoxy(2, 8)
-            print(f"Data: R$ {order.order_date}")
-            gotoxy(2, 9)
-            print(f"Valor total da compra: R$ {total_value:.2f}")
-    else:
-        gotoxy(2, 10)
-        printColored("Nenhum produto foi adicionado ao carrinho.", RED, end="")
-    
-    gotoxy(2, 12)
-    print(input("Pressione Enter para voltar ao menu principal..."))
-    clearScreen()
+            # Criar nova ordem e adicionar ao arquivo
+            new_order = Order(order_id=last_order_id + 1, product_id=new_product.code, product_amount=product_amount, order_price=total_selling_value, order_date=order_date)
+            orders_file.write(f"ID da compra: {new_order.order_id}; Código: {new_product.code}; Quantidade: {new_order.product_amount}; Preço Compra Total: {total_buying_value:.2f}; Preço Venda Total: {total_selling_value:.2f}; Data: {new_order.order_date}\n")
+            gotoxy(2, 14)
+            printColored(f"Compra registrada com sucesso! Total da compra: R$ {total_selling_value:.2f}", GREEN, end="")
+
+    except Exception as e:
+        gotoxy(2, 14)
+        printColored(f"Erro ao registrar a compra: {e}", RED, end="")
+        return
+
+    # Voltar ao menu principal
+    gotoxy(2, 15)
+    input("Pressione ENTER para voltar ao menu principal...")
+    os.system('cls')
     main()
+
+# show purchase history
+
+def show_purchase_history():
+    try:
+        # Read orders from the file
+        with open("./data/orders.txt", "r", encoding="UTF-8") as file:
+            orders = file.readlines()
+    except FileNotFoundError:
+        print("Erro: Arquivo de pedidos não encontrado.")
+        return
+    except Exception as e:
+        print(f"Erro ao ler o arquivo: {e}")
+        return
+
+    if not orders:
+        print("Nenhum pedido encontrado.")
+    else:
+        printTitle("Histórico de Compras", GREEN, WHITE)
+        print("\n")
+
+        for line in orders:
+            order_data = line.strip().split(";")
+            order_id = order_data[0].split(":")[1].strip()
+            product_code = order_data[1].split(":")[1].strip()
+            quantity = order_data[2].split(":")[1].strip()
+            total_price = order_data[3].split(":")[1].strip()
+            order_date = order_data[4].split(":")[1].strip()
+
+            print(f"ID do Pedido: {order_id}")
+            print(f"Código do Produto: {product_code}")
+            print(f"Quantidade: {quantity}")
+            print(f"Preço Total: R$ {total_price}")
+            print(f"Data: {order_date}")
+            print("─" * 40)
+
+    input("Pressione ENTER para continuar...")
+    os.system('cls')  # Limpar a tela
+    main()
+
 # Show products list
+
 def show_all_products():
     file = open("./data/products.txt", "r", encoding="UTF-8")
 
@@ -292,62 +404,347 @@ def show_all_products():
     os.system('cls')  # Clear the screen
     main()
 
+# Register new sale
+
+def new_sale():
+    clearScreen()
+    printTitle("Nova Venda", MAGENTA, MAGENTA)
+
+    try:
+        with open("./data/products.txt", "r", encoding="utf-8") as file:
+            products = []
+            date_regex = re.compile(r"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$")
+
+            for line in file:
+                try:
+                    fields = line.strip().split(";")
+                    if len(fields) < 5:
+                        gotoxy(2, 7)
+                        print(f"Erro ao processar a linha: {line}. Formatação incorreta.")
+                        continue
+                    
+                    code = int(fields[0].split(":")[1].strip())
+                    name = fields[1].split(":")[1].strip()
+                    selling_price = float(fields[4].split(":")[1].strip())
+                    
+                    products.append((code, name, selling_price))
+
+                except (IndexError, ValueError) as e:
+                    gotoxy(2, 7)
+                    print(f"Erro ao processar a linha: {line}. Erro: {e}")
+                    continue
+            
+            if not products:
+                gotoxy(2, 7)
+                print("Nenhum produto disponível para venda.")
+                return
+
+            # Desenha uma caixa onde os dados da venda serão inseridos
+            drawBox(1, 5, 120, 16, WHITE)
+            gotoxy(2, 6)
+            selected_product = int(input("Digite o código do produto: "))
+            product_found = next((p for p in products if p[0] == selected_product), None)
+
+            if product_found:
+                gotoxy(2, 7)
+                print(f"Produto selecionado: {product_found[1]} - Preço de venda: R${product_found[2]:.2f}")
+                
+                gotoxy(2, 8)
+                quantity = int(input("Digite a quantidade: "))
+                
+                gotoxy(2, 9)
+                while True:
+                    selling_date = input("Digite a data da venda (dd/mm/aaaa): ")
+                    if re.match(date_regex, selling_date):
+                        break
+                    gotoxy(2, 10)
+                    print("Erro: Data inválida. Formato dd/mm/aaaa.")
+
+                gotoxy(2, 11)
+                payment_method = input("Informe o método de pagamento: ")
+
+                # Gerar um novo ID de venda baseado nas vendas anteriores
+                try:
+                    with open("./data/sell_log.txt", "r", encoding="utf-8") as sell_file:
+                        last_sale = sell_file.readlines()[-1]
+                        last_id = int(last_sale.split(";")[0].split(":")[1].strip())
+                        sale_id = last_id + 1
+                except (FileNotFoundError, IndexError):
+                    # Se o arquivo não existe ou está vazio, começamos com o ID 1
+                    sale_id = 1
+
+                # Criação da instância de Sell
+                sale = Sell(
+                    id=sale_id,
+                    item=product_found[1],
+                    price=product_found[2],
+                    quantity=quantity,
+                    date=selling_date,
+                    payment_method=payment_method
+                )
+
+                # Registrar a venda no arquivo de log
+                with open("./data/sell_log.txt", "a", encoding="utf-8") as sell_file:
+                    sell_file.write(str(sale) + "\n")
+
+                # Exibir confirmação da venda
+                gotoxy(2, 12)
+                printColored(f"Venda ID {sale_id} realizada: {quantity}x {product_found[1]} a R${product_found[2]:.2f} cada com {payment_method} como forma de pagamento.", GREEN)
+                gotoxy(2, 13)
+                print(f"Total: R${sale.total_price:.2f}")
+                gotoxy(2, 14)
+                input("Pressione ENTER para voltar ao menu...")
+                main()
+
+            else:
+                gotoxy(2, 15)
+                printColored("Erro: Produto não encontrado.", RED)
+
+    except FileNotFoundError:
+        gotoxy(2, 7)
+        print("Erro: Arquivo de produtos não encontrado.")
+    except Exception as e:
+        gotoxy(2, 7)
+        print(f"Erro inesperado: {e}")
+
+
+    except FileNotFoundError:
+        print("Erro: Arquivo de produtos não encontrado.")
+    except Exception as e:
+        print(f"Erro inesperado: {e}")
+
+# cancel sale
+
+def cancel_sale():
+    clearScreen()
+    printTitle("Cancelar Venda", RED, RED)
+    
+    try:
+        # Abrir o arquivo de vendas
+        with open("./data/sell_log.txt", "r", encoding="utf-8") as sell_file:
+            sales = sell_file.readlines()
+            
+            if not sales:
+                gotoxy(1, 5)
+                print("Nenhuma venda registrada.")
+                gotoxy(1, 6)
+                input("Pressione ENTER para voltar ao menu...")
+                main()
+
+        # Mostrar todas as vendas registradas
+        gotoxy(1, 5)
+        print("Vendas registradas:\n")
+        for sale in sales:
+            print(f"{sale.strip()}")
+
+        # Solicitar o ID da venda a ser cancelada
+        sale_id = int(input("\nDigite o ID da venda que deseja cancelar (ou '0' para cancelar a operação): "))
+
+        if sale_id == 0:
+            os.system('cls')
+            printTitle("Cancelamento de venda abortado.", GREEN)
+            gotoxy(1, 5)
+            input("Pressione ENTER para voltar ao menu...")
+            main()
+
+        # Verificar se o ID informado é válido
+        sale_found = None
+        for sale in sales:
+            sale_data = sale.split(";")
+            if int(sale_data[0].split(":")[1].strip()) == sale_id:
+                sale_found = sale
+                break
+
+        if not sale_found:
+            os.system('cls')
+            printTitle("Erro: Venda com ID não encontrada.", RED)
+            gotoxy(1, 5)
+            input("Pressione ENTER para voltar ao menu...")
+            main()
+
+        # Remover a venda encontrada da lista
+        sales.remove(sale_found)
+
+        # Salvar as vendas restantes no arquivo, sobrescrevendo o arquivo original
+        with open("./data/sell_log.txt", "w", encoding="utf-8") as sell_file:
+            sell_file.writelines(sales)
+
+        # Registrar o cancelamento em um novo arquivo de log de cancelamento
+        with open("./data/canceled_sales.txt", "a", encoding="utf-8") as cancel_file:
+            cancel_file.write(f"Venda cancelada: {sale_found.strip()}\n")
+
+        os.system('cls')
+        printTitle(f"A venda com ID {sale_id} foi cancelada com sucesso.", MAGENTA)
+        gotoxy(1, 5)
+        input("Pressione ENTER para voltar ao menu...")
+
+    except FileNotFoundError:
+        os.system('cls')
+        printTitle("Erro: Arquivo de vendas não encontrado.", YELLOW)
+        gotoxy(2, 5)
+        input("Pressione ENTER para voltar ao menu...")
+    except ValueError:
+        os.system('cls')
+        printTitle("Erro: Entrada inválida, por favor digite um número.")
+        gotoxy(2, 5)
+        input("Pressione ENTER para voltar ao menu...")
+    except Exception as e:
+        os.system('cls')
+        print(f"Erro inesperado: {e}")
+        gotoxy(2, 5)
+        input("Pressione ENTER para voltar ao menu...")
+
+    clearScreen()
+    main()
+# Sale history
+
+def show_sales_history():
+    clearScreen()
+    printTitle("Histórico de Vendas", BLUE, WHITE)
+    
+    try:
+        # Abrir o arquivo de vendas
+        with open("./data/sell_log.txt", "r", encoding="utf-8") as sell_file:
+            sales = sell_file.readlines()
+
+            if not sales:
+                gotoxy(1, 5)
+                print("Nenhuma venda registrada.")
+                gotoxy(1, 6)
+                input("Pressione ENTER para voltar ao menu...")
+                return
+
+        # Exibir todas as vendas
+
+        for i, sale in enumerate(sales, start=1):
+            gotoxy(2, 3 + i)
+            print(f"{sale.strip()}")
+
+        # Após exibir as vendas, solicitar ao usuário pressionar ENTER para voltar ao menu principal
+        gotoxy(2, 5 + i)
+        input("Pressione ENTER para voltar ao menu...")
+
+    except FileNotFoundError:
+        gotoxy(2, 5)
+        print("Erro: Arquivo de vendas não encontrado.")
+        gotoxy(2, 6)
+        input("Pressione ENTER para voltar ao menu...")
+    except Exception as e:
+        gotoxy(2, 5)
+        print(f"Erro inesperado: {e}")
+        gotoxy(2, 6)
+        input("Pressione ENTER para voltar ao menu...")
+
+    clearScreen()
+    main()
+
+# cancelled sales
+
+def show_cancelled_sales_history():
+    clearScreen()
+    printTitle("Histórico de Vendas Canceladas", WHITE)
+    
+    try:
+        # Abrir o arquivo de vendas canceladas
+        with open("./data/canceled_sales.txt", "r", encoding="utf-8") as cancel_file:
+            cancelled_sales = cancel_file.readlines()
+            
+            if not cancelled_sales:
+                gotoxy(1, 5)
+                print("Nenhuma venda cancelada registrada.")
+                gotoxy(1, 6)
+                input("Pressione ENTER para voltar ao menu...")
+                main()
+            else:
+                # Variável para controlar a linha de impressão
+                start_row = 5
+                
+                for sale in cancelled_sales:
+                    gotoxy(2, start_row)  # Exibe cada venda cancelada em uma nova linha
+                    print(sale.strip())  # Remove espaços e quebras de linha desnecessárias
+                    
+                    # Incrementar a posição vertical
+                    start_row += 1
+
+                # Finalizar com opção de retorno ao menu
+                gotoxy(1, start_row + 1)
+                input("Pressione ENTER para voltar ao menu...")
+                main()
+
+    except FileNotFoundError:
+        gotoxy(1, 5)
+        print("Erro: Arquivo de vendas canceladas não encontrado.")
+        gotoxy(1, 6)
+        input("Pressione ENTER para voltar ao menu...")
+        main()
 def main():
+
+
     menu = f"MENU"
-    menu1 = '1. Cadastrar produto'
-    menu2 = '2. Exibir produtos'
-    menu3 = '3. Nova Compra'
-    menu4 = '4. Cancelar compra'
-    menu5 = '5. Editar produto'
-    menu6 = '6. Apagar produto'
-    menu7 = '7. Sair'
+    menu1 = '1. Nova compra'
+    menu2 = '2. Cancelar compra'
+    menu3 = '3. Exibir produtos'
+    menu4 = '4. Editar produto'
+    menu5 = '5. Apagar produto'
+    menu6 = '6. Histórico de compras'
+    menu7 = '7. Nova venda'
+    menu8 = '8. Cancelar venda'
+    menu9 = '9. Histórico de vendas'
+    menu10 = '10. Vendas canceladas'
+    menu11 = '11. Sair'
+
+
 
     while True:
         os.system('cls') # Clear the screen
+        printTitle(menu, GREEN)
         
-        drawRoundBorderBox(1, 1, 60, 20, GREEN)
+        drawRoundBorderBox(1, 4, 120, 22, GREEN)
 
-        gotoxy(26, 1); printGreen(menu, end="")
-        gotoxy(5, 3); printGreen(menu1, end="")
-        gotoxy(5, 5); printGreen(menu2, end="")
-        gotoxy(5, 7); printGreen(menu3, end="")
+        gotoxy(5, 6); printGreen(menu1, end="")
+        gotoxy(5, 7); printGreen(menu2, end="")
+        gotoxy(5, 8); printGreen(menu3, end="")
         gotoxy(5, 9); printGreen(menu4, end="")
-        gotoxy(5, 11); printGreen(menu5, end="")
-        gotoxy(5, 13); printGreen(menu6, end="")
-        gotoxy(5, 15); printGreen(menu7, end="")
-        gotoxy(5, 18); option = input("Digite o número da opção: ")
+        gotoxy(5, 10); printGreen(menu5, end="")
+        gotoxy(5, 11); printGreen(menu6, end="")
+        gotoxy(5, 12); printGreen(menu7, end="")
+        gotoxy(5, 13); printGreen(menu8, end="")
+        gotoxy(5, 14); printGreen(menu9, end="")
+        gotoxy(5, 15); printGreen(menu10, end="")
+        gotoxy(5, 16); printGreen(menu11, end="")
+        gotoxy(5, 20); option = input("Digite o número da opção: ")
 
 
         if option == "1":
             os.system('cls')
-            print(f"{'='*10}Cadastro de produto{'='*10}")
-            create_new_product()
+            register_product_and_purchase()
         elif option == "2":
             os.system('cls')
-            show_all_products()
+            cancel_order()
         elif option == "3":
             os.system('cls')
-            make_purchase()
+            show_all_products()
         elif option == "4":
-            # cancel_order()
-            gotoxy(5, 9)
-            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-            gotoxy(5, 10)
-            input("Pressione ENTER para voltar ao menu...")
-            os.system('cls')
-            main()
-        elif option == "5":
             update_product()
-        elif option == "6":
-            # delete_product()
-            gotoxy(5, 13)
-            printRed("### Esta opção está em fase de desenvolvimento... ###", end="")
-            gotoxy(5, 14)
-            input("Pressione ENTER para voltar ao menu...")
+        elif option == "5":
             os.system('cls')
-            main()
-            pass
+            delete_product()
+        elif option == "6":
+            os.system('cls')
+            show_purchase_history()
         elif option == "7":
+            os.system('cls')
+            new_sale()
+        elif option == "8":
+            os.system('cls')
+            cancel_sale()
+        elif option == "9":
+            os.system('cls')
+            show_sales_history()
+        elif option == "10":
+            os.system('cls')
+            show_cancelled_sales_history()
+        elif option == "11":
             os.system('cls')
             drawBox(1, 1, 30, 7)
             gotoxy(10, 4)
@@ -362,7 +759,7 @@ def main():
             quit()
         elif option == "":
             os.system('cls')
-            drawBox(1, 1, 60, 7)
+            drawBox(1, 1, 60, 7, RED)
             gotoxy(10, 4)
             print("@@@ O campo não pode ficar vazio @@@")
             time.sleep(1)
@@ -378,5 +775,5 @@ def main():
         break
 
 # Authenticate user
-authenticate()
+# authenticate()
 main()
